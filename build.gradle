@@ -1,0 +1,69 @@
+version '0.0.1'
+group 'daggerok'
+
+buildscript {
+  repositories { jcenter() }
+  dependencies { classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE' }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+
+jar { baseName = 'continuous' }
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories { jcenter() }
+
+dependencies {
+
+  def hbsVer = '4.0.4'
+
+  compile 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.2.12',
+          "com.github.jknack:handlebars-helpers:$hbsVer",
+          "com.github.jknack:handlebars-jackson2:$hbsVer",
+          "com.github.jknack:handlebars-humanize:$hbsVer",
+          "com.github.jknack:handlebars-markdown:$hbsVer",
+          'org.springframework.boot:spring-boot-starter-security',
+          'org.springframework.boot:spring-boot-starter-actuator',
+          'org.springframework.boot:spring-boot-starter-data-mongodb',
+          'org.springframework.boot:spring-boot-starter-data-rest',
+          'org.springframework.boot:spring-boot-starter-hateoas',
+          'org.springframework.boot:spring-boot-devtools',
+          'org.projectlombok:lombok'
+
+  testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+task install(type: Exec) {
+  workingDir 'client'
+  executable 'bash'
+  args '-c', 'npm i'
+  //commandLine 'npm', 'i'
+}
+
+task client(type: Exec, dependsOn: ['install']) {
+  workingDir 'client'
+  executable 'bash'
+  args '-c', 'npm run build'
+  //commandLine 'npm', 'run', 'build'
+}
+
+task start(type: Exec) {
+  workingDir './client'
+  executable 'bash'
+  args '-c', 'npm start'
+  //commandLine 'npm', 'start'
+}
+
+task dev(type: Exec) {
+  workingDir './client'
+  executable 'bash'
+  args '-c', 'npm run dev'
+  //commandLine 'npm', 'run', 'dev'
+}
+
+build.dependsOn client
+build.shouldRunAfter client

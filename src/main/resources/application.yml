@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: dockerhost
+  data:
+    mongodb:
+      host: ${ME_CONFIG_MONGODB_SERVER:docker}
+      port: ${ME_CONFIG_MONGODB_PORT:27017}
+    rest:
+      base-path: /api
+  application:
+    name: react-spring-data-rest
+  mustache:
+    suffix: .hbs
+management:
+  context-path: /mgmt
+logging:
+  level:
+    org.springframework.security: INFO
+    org.springframework.web: INFO
+---
+spring:
+  profiles: dockerhost
+  data.mongodb.host: docker
+---
+spring:
+  profiles: localhost
+  data.mongodb.host: localhost

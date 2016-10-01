@@ -1,0 +1,27 @@
+continuous_mongo_express:
+  image: mongo-express:latest
+  environment:
+    ME_CONFIG_MONGODB_SERVER: continuous_mongo
+  ports:
+    - "8081:8081"
+  links:
+    - continuous_mongo
+
+#docker exec -it continuous_mongo mongo admin
+continuous_mongo:
+  hostname: continuous_mongo
+  image: mongo:3
+  environment:
+    #- MONGO_PORT_27017_TCP_ADDR: localhost
+    MONGO_PORT_27017_TCP_PORT: 27017
+  ports:
+    - "27017:27017"
+
+continuous_sonarqube:
+  image: sonarqube:alpine
+  ports:
+    - "9000:9000"
+    - "9002:9002"
+
+# docker-compose -f src/main/docker/all.yml up -d --build --remove-orphans
+# docker-compose -f src/main/docker/all.yml down
